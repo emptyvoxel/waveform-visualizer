@@ -2,6 +2,8 @@ const SAMPLES = 1000;
 
 const audioContext = new AudioContext();
 
+const waveform = document.getElementById('waveform');
+
 function loadAudio () {
     fetch('/song.mp3')
         .then(response => response.arrayBuffer())
@@ -18,7 +20,7 @@ function resample (channelData) {
         let sum = 0;
 
         for (let j = 0; j < chunkSize; j++) {
-            sum += channelData[offset + j];
+            sum += Math.abs(channelData[offset + j]);
         }
         output.push(sum / chunkSize);
     }
@@ -27,7 +29,13 @@ function resample (channelData) {
 }
 
 function process (audioData) {
-    const channelData = audioData.getChannelData(0);
+    const channel = resample(audioData.getChannelData(0));
 
-    console.log(resample(channelData));
+    for (let i = 0; i < channel.length; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.height = `${channel[i] * 100}%`;
+
+        waveform.appendChild(bar);
+    }
 }

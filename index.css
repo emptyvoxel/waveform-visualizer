@@ -1,0 +1,17 @@
+html, body {
+    margin: 0;
+    background-color: black;
+    overflow-x: auto;
+}
+
+#waveform {
+    position: absolute;
+    display: flex;
+    align-items: baseline;
+    height: 50%;
+}
+
+.bar {
+    width: 1px;
+    background-color: aqua;
+}
