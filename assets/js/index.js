@@ -3,10 +3,10 @@ const SAMPLES = 1000;
 const audioContext = new AudioContext();
 
 const waveform = document.getElementById('waveform');
+const file = document.getElementById('file');
 
-function loadAudio () {
-    fetch('/song.mp3')
-        .then(response => response.arrayBuffer())
+file.oninput = ({ target }) => {
+    target.files[0].arrayBuffer()
         .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
         .then(audioData => process(audioData));
 }
@@ -41,6 +41,7 @@ function normalize (data) {
 
 function process (audioData) {
     const channel = normalize(resample(audioData.getChannelData(0)));
+    waveform.innerHTML = '';
 
     for (let i = 0; i < channel.length; i++) {
         const bar = document.createElement('div');
