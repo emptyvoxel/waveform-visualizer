@@ -8,10 +8,14 @@ html, body {
     position: absolute;
     display: flex;
     align-items: baseline;
-    height: 50%;
+    height: 200px;
 }
 
-.bar {
-    width: 1px;
-    background-color: aqua;
+.svg1 {
+    transform: scaleY(-1);
+}
+
+.svg2 {
+    position: absolute;
+    top: 100px;
 }
