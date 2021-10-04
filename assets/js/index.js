@@ -28,8 +28,19 @@ function resample (channelData) {
     return output;
 }
 
+function normalize (data) {
+    const max = Math.max(...data);
+    const output = [];
+
+    for (let i = 0; i < data.length; i++) {
+        output[i] = data[i] / max;
+    }
+
+    return output;
+}
+
 function process (audioData) {
-    const channel = resample(audioData.getChannelData(0));
+    const channel = normalize(resample(audioData.getChannelData(0)));
 
     for (let i = 0; i < channel.length; i++) {
         const bar = document.createElement('div');
