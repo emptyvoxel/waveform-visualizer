@@ -5,6 +5,7 @@ const MIDDLE = window.innerWidth / 2;
 const CENTER = HEIGHT / 2;
 
 const root = document.documentElement;
+const message = document.getElementById('message');
 const file = document.getElementById('file');
 const path = document.getElementById('path');
 const audio = document.getElementById('audio');
@@ -16,6 +17,10 @@ let interval;
 root.style.setProperty('--height', `${HEIGHT}px`);
 root.style.setProperty('--width', `${SAMPLES}px`);
 
+message.onclick = () => {
+    window.scrollTo(0, 0);
+}
+
 file.oninput = ({ target }) => {
     audio.setAttribute('src', URL.createObjectURL(target.files[0]));
     audio.load();
@@ -26,6 +31,7 @@ file.oninput = ({ target }) => {
 }
 
 audio.onplay = () => {
+    message.style.opacity = 0;
     interval = setInterval(() => {
         const percentage = audio.currentTime / audio.duration;
         fill.style.width = `${percentage * 100}%`;
@@ -35,6 +41,7 @@ audio.onplay = () => {
 }
 
 audio.onended = () => {
+    message.style.opacity = 1;
     clearInterval(interval);
 }
 
