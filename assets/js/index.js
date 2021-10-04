@@ -1,4 +1,5 @@
-const SAMPLES = 1000;
+const SAMPLES = 44000;
+const URI = 'http://www.w3.org/2000/svg';
 
 const audioContext = new AudioContext();
 
@@ -41,13 +42,25 @@ function normalize (data) {
 
 function process (audioData) {
     const channel = normalize(resample(audioData.getChannelData(0)));
-    waveform.innerHTML = '';
 
+    // SVG > Canvas
+    const svg = document.createElementNS(URI, 'svg');
+    svg.setAttribute('class', 'svg');
+    svg.setAttribute('height', '100px');
+    svg.setAttribute('width', `${SAMPLES}px`);
+
+    const path = document.createElementNS(URI, 'path');
+    path.setAttribute('fill', '#0ff');
+    path.setAttribute('stroke', '#0ff');
+    path.setAttribute('stroke-width', '1px');
+
+    let d = 'M0,0';
     for (let i = 0; i < channel.length; i++) {
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-        bar.style.height = `${channel[i] * 100}%`;
-
-        waveform.appendChild(bar);
+        d += ` L${i},${channel[i] * 100}`;
     }
+    d += ' Z';
+
+    path.setAttribute('d', d);
+    svg.appendChild(path);
+    waveform.appendChild(svg);
 }
