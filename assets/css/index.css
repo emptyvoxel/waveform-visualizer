@@ -1,12 +1,14 @@
-html, body {
-    margin: 0;
-    background-color: black;
-    overflow-x: auto;
+:root {
+    color-scheme: dark;
 }
 
-#waveform {
-    position: absolute;
-    display: flex;
-    align-items: baseline;
-    height: 200px;
+html, body {
+    margin: 0;
+    background-color: #10101f;
+}
+
+#path {
+    fill: #0ff;
+    stroke: #0ff;
+    stroke-width: 1px;
 }

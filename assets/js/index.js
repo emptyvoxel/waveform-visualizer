@@ -1,12 +1,15 @@
 const SAMPLES = 44000;
 const HEIGHT = 200;
 const CENTER = HEIGHT / 2;
-const URI = 'http://www.w3.org/2000/svg';
 
 const audioContext = new AudioContext();
 
-const waveform = document.getElementById('waveform');
+const svg = document.getElementById('svg');
 const file = document.getElementById('file');
+const path = document.getElementById('path');
+
+svg.style.height = `${HEIGHT}px`;
+svg.style.width = `${SAMPLES}px`;
 
 file.oninput = ({ target }) => {
     target.files[0].arrayBuffer()
@@ -42,42 +45,11 @@ function normalize (data) {
     return output;
 }
 
-function createSVG () {
-    const svg = document.createElementNS(URI, 'svg');
-    svg.setAttribute('class', 'svg');
-    svg.setAttribute('height', `${HEIGHT}px`);
-    svg.setAttribute('width', `${SAMPLES}px`);
-
-    return svg;
-}
-
-function createPath () {
-    const path = document.createElementNS(URI, 'path');
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', '#0ff');
-    path.setAttribute('stroke-width', '1px');
-
-    return path;
-}
-
-function drawPath (channel) {
-    let d = 'M0,0';
-    for (let i = 0; i < channel.length; i++) {
-        d += ` L${i},${channel[i] * 100}`;
-    }
-    d += ' Z';
-
-    return d;
-}
-
 function process (audioData) {
     const ch = [
         normalize(resample(audioData.getChannelData(0))),
         normalize(resample(audioData.getChannelData(1))),
     ];
-
-    const svg = createSVG();
-    const path = createPath();
 
     let d = `M0,${CENTER}`;
     for (let i = 0; i < ch[0].length; i++) {
@@ -90,6 +62,4 @@ function process (audioData) {
     d += ' Z';
 
     path.setAttribute('d', d);
-    svg.appendChild(path);
-    waveform.appendChild(svg);
 }
