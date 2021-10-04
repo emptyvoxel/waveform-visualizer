@@ -10,8 +10,17 @@
 </head>
 <body>
     <input type="file" id="file">
-    <svg id="svg">
-        <path id="path"/>
+    <audio id="audio"></audio>
+    <svg class="svg">
+        <clipPath id="waveform">
+            <path id="path"/>
+        </clipPath>
     </svg>
+
+    <div class="player">
+        <div class="progress">
+            <div id="fill"></div>
+        </div>
+    </div>
 </body>
 </html>

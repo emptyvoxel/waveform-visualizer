@@ -1,20 +1,41 @@
+const TIMEOUT = 10;
 const SAMPLES = 44000;
 const HEIGHT = 200;
+const MIDDLE = window.innerWidth / 2;
 const CENTER = HEIGHT / 2;
 
-const audioContext = new AudioContext();
-
-const svg = document.getElementById('svg');
+const root = document.documentElement;
 const file = document.getElementById('file');
 const path = document.getElementById('path');
+const audio = document.getElementById('audio');
+const fill = document.getElementById('fill');
 
-svg.style.height = `${HEIGHT}px`;
-svg.style.width = `${SAMPLES}px`;
+const audioContext = new AudioContext();
+let interval;
+
+root.style.setProperty('--height', `${HEIGHT}px`);
+root.style.setProperty('--width', `${SAMPLES}px`);
 
 file.oninput = ({ target }) => {
+    audio.setAttribute('src', URL.createObjectURL(target.files[0]));
+    audio.load();
+
     target.files[0].arrayBuffer()
         .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
         .then(audioData => process(audioData));
+}
+
+audio.onplay = () => {
+    interval = setInterval(() => {
+        const percentage = audio.currentTime / audio.duration;
+        fill.style.width = `${percentage * 100}%`;
+
+        window.scroll(percentage * SAMPLES - MIDDLE, 0);
+    }, TIMEOUT);
+}
+
+audio.onended = () => {
+    clearInterval(interval);
 }
 
 function resample (channelData) {
@@ -62,4 +83,5 @@ function process (audioData) {
     d += ' Z';
 
     path.setAttribute('d', d);
+    audio.play();
 }

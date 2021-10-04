@@ -7,8 +7,27 @@ html, body {
     background-color: #10101f;
 }
 
-#path {
-    fill: #0ff;
-    stroke: #0ff;
-    stroke-width: 1px;
+.svg {
+    position: absolute;
+}
+
+.player {
+    position: absolute;
+    top: calc(50% - var(--height) / 2);
+    width: var(--width);
+    height: var(--height);
+}
+
+.progress {
+    width: 100%;
+    height: 100%;
+    background-color: #cccccc22;
+    clip-path: url(#waveform);
+}
+
+#fill {
+    width: 0%;
+    height: 100%;
+    background-color: #0ff;
+    /* transition: 0s width; */
 }
