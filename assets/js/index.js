@@ -1,4 +1,6 @@
 const SAMPLES = 44000;
+const HEIGHT = 200;
+const CENTER = HEIGHT / 2;
 const URI = 'http://www.w3.org/2000/svg';
 
 const audioContext = new AudioContext();
@@ -40,10 +42,10 @@ function normalize (data) {
     return output;
 }
 
-function createSVG (n) {
+function createSVG () {
     const svg = document.createElementNS(URI, 'svg');
-    svg.setAttribute('class', `svg${n}`);
-    svg.setAttribute('height', '100px');
+    svg.setAttribute('class', 'svg');
+    svg.setAttribute('height', `${HEIGHT}px`);
     svg.setAttribute('width', `${SAMPLES}px`);
 
     return svg;
@@ -51,7 +53,7 @@ function createSVG (n) {
 
 function createPath () {
     const path = document.createElementNS(URI, 'path');
-    path.setAttribute('fill', '#0ff');
+    path.setAttribute('fill', 'none');
     path.setAttribute('stroke', '#0ff');
     path.setAttribute('stroke-width', '1px');
 
@@ -69,25 +71,25 @@ function drawPath (channel) {
 }
 
 function process (audioData) {
-    const channel1 = normalize(resample(audioData.getChannelData(0)));
-    const channel2 = normalize(resample(audioData.getChannelData(1)));
+    const ch = [
+        normalize(resample(audioData.getChannelData(0))),
+        normalize(resample(audioData.getChannelData(1))),
+    ];
 
-    // SVG > Canvas
-    const svg1 = createSVG(1);
-    const svg2 = createSVG(2);
+    const svg = createSVG();
+    const path = createPath();
 
-    const path1 = createPath();
-    const path2 = createPath();
+    let d = `M0,${CENTER}`;
+    for (let i = 0; i < ch[0].length; i++) {
+        d += ` L${i},${CENTER - ch[0][i] * CENTER}`;
+    }
 
-    const d1 = drawPath(channel1);
-    const d2 = drawPath(channel2);
+    for (let i = ch[1].length - 1; i >= 0; i--) {
+        d += ` L${i},${CENTER + ch[1][i] * CENTER}`;
+    }
+    d += ' Z';
 
-    path1.setAttribute('d', d1);
-    path2.setAttribute('d', d2);
-    
-    svg1.appendChild(path1);
-    svg2.appendChild(path2);
-
-    waveform.appendChild(svg1);
-    waveform.appendChild(svg2);
+    path.setAttribute('d', d);
+    svg.appendChild(path);
+    waveform.appendChild(svg);
 }

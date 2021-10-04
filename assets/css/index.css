@@ -10,12 +10,3 @@ html, body {
     align-items: baseline;
     height: 200px;
 }
-
-.svg1 {
-    transform: scaleY(-1);
-}
-
-.svg2 {
-    position: absolute;
-    top: 100px;
-}
